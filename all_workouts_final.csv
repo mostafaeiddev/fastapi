@@ -1,0 +1,121 @@
+Muscle_Group,Workout_Variation,Exercise_Number,Exercise_Name,Exercise_Type
+Chest,Chest_Variation_1,1,Barbell Bench Press,Compound
+Chest,Chest_Variation_1,2,Incline Barbell Press,Compound
+Chest,Chest_Variation_1,3,Cable Crossovers High to Low,Isolation
+Chest,Chest_Variation_2,1,Dumbbell Bench Press,Compound
+Chest,Chest_Variation_2,2,Incline Dumbbell Press,Compound
+Chest,Chest_Variation_2,3,Cable Crossovers High to Low,Isolation
+Chest,Chest_Variation_3,1,Machine Bench Press,Isolation
+Chest,Chest_Variation_3,2,Incline Dumbbell Press,Compound
+Chest,Chest_Variation_3,3,Dips,Compound
+Chest,Chest_Variation_4,1,Machine Bench Press,Isolation
+Chest,Chest_Variation_4,2,Incline Barbell Press,Compound
+Chest,Chest_Variation_4,3,Pec Deck Flyes,Isolation
+Chest,Chest_Variation_5,1,Barbell Bench Press,Compound
+Chest,Chest_Variation_5,2,Incline Barbell Press,Compound
+Chest,Chest_Variation_5,3,Pec Deck Flyes,Compound
+Chest,Chest_Variation_6,1,Dumbbell Bench Press,Compound
+Chest,Chest_Variation_6,2,Incline Dumbbell Press,Compound
+Chest,Chest_Variation_6,3,Pec Deck Flyes,Isolation
+Shoulders,Shoulder_Variation_1,1,Barbell Overhead Press,Compound
+Shoulders,Shoulder_Variation_1,2,Lateral Raises,Isolation
+Shoulders,Shoulder_Variation_2,1,Dumbbell Overhead Press,Compound
+Shoulders,Shoulder_Variation_2,2,Cable Lateral Raises,Isolation
+Shoulders,Shoulder_Variation_3,1,Machine Shoulder Press,Compound
+Shoulders,Shoulder_Variation_3,2,Lateral Raises,Isolation
+Shoulders,Shoulder_Variation_4,1,Front Raises,Isolation
+Shoulders,Shoulder_Variation_4,2,Cable Lateral Raises,Isolation
+Shoulders,Shoulder_Variation_5,1,Barbell Overhead Press,Compound
+Shoulders,Shoulder_Variation_5,2,Cable Lateral Raises,Isolation
+Shoulders,Shoulder_Variation_6,1,Dumbbell Overhead Press,Compound
+Shoulders,Shoulder_Variation_6,2,Lateral Raises,Isolation
+Back,Back_Variation_1,1,Seated Rows Close-Grip,Compound
+Back,Back_Variation_1,2,Barbell Rows,Compound
+Back,Back_Variation_1,3,Lat Pulldowns,Compound
+Back,Back_Variation_2,1,Lat Pulldowns,Compound
+Back,Back_Variation_2,2,Dumbbell Rows,Compound
+Back,Back_Variation_2,3,Seated Rows Close-Grip,Compound
+Back,Back_Variation_3,1,Single-Arm Dumbbell Row,Compound
+Back,Back_Variation_3,2,T-Bar Rows,Compound
+Back,Back_Variation_3,3,Straight Arm Pulldowns,Isolation
+Back,Back_Variation_4,1,Lat Pulldowns,Compound
+Back,Back_Variation_4,2,Low Cable Rows,Compound
+Back,Back_Variation_4,3,Face Pulls,Isolation
+Back,Back_Variation_5,1,Barbell Rows,Compound
+Back,Back_Variation_5,2,Lat Pulldowns,Compound
+Back,Back_Variation_5,3,Single-Arm Dumbbell Row,Isolation
+Back,Back_Variation_6,1,T-Bar Rows,Compound
+Back,Back_Variation_6,2,Lat Pulldowns,Compound
+Back,Back_Variation_6,3,Seated Rows Close-Grip,Compound
+Biceps,Biceps_Variation_1,1,Barbell Curls,Isolation
+Biceps,Biceps_Variation_1,2,Concentration Curls,Isolation
+Biceps,Biceps_Variation_2,1,Dumbbell Curls,Isolation
+Biceps,Biceps_Variation_2,2,Preacher Curls,Isolation
+Biceps,Biceps_Variation_3,1,Cable Curls,Isolation
+Biceps,Biceps_Variation_3,2,Concentration Curls,Isolation
+Biceps,Biceps_Variation_4,1,Barbell Curls,Isolation
+Biceps,Biceps_Variation_4,2,Incline Dumbbell Curls,Isolation
+Biceps,Biceps_Variation_5,1,Dumbbell Curls,Isolation
+Biceps,Biceps_Variation_5,2,Spider Curls,Isolation
+Biceps,Biceps_Variation_6,1,Cable Curls,Isolation
+Biceps,Biceps_Variation_6,2,Incline Dumbbell Curls,Isolation
+Triceps,Triceps_Variation_1,1,Dumbbell Tricep Kickback,Isolation
+Triceps,Triceps_Variation_1,2,Rope Pushdowns,Isolation
+Triceps,Triceps_Variation_2,1,Tricep Machine Dip,Isolation
+Triceps,Triceps_Variation_2,2,Close-Grip Bench Press,Compound
+Triceps,Triceps_Variation_3,1,Single-Arm Cable Pushdown,Compound
+Triceps,Triceps_Variation_3,2,Tricep Pushdown,Isolation
+Triceps,Triceps_Variation_4,1,Overhead Rope Extensions,Isolation
+Triceps,Triceps_Variation_4,2,Rope Pushdowns,Compound
+Triceps,Triceps_Variation_5,1,Cable Kickbacks,Isolation
+Triceps,Triceps_Variation_5,2,Tricep Pushdown,Isolation
+Triceps,Triceps_Variation_6,1,Rope Pushdowns,Isolation
+Triceps,Triceps_Variation_6,2,Close-Grip Push-Ups,Compound
+Legs,Legs_Variation_1,1,Leg Press,Compound
+Legs,Legs_Variation_1,2,Lying Leg Curl,Isolation
+Legs,Legs_Variation_1,3,Hip Adductor Machine,Isolation
+Legs,Legs_Variation_1,4,Hip Thrust,Isolation
+Legs,Legs_Variation_1,5,Standing Calf Raise,Isolation
+Legs,Legs_Variation_1,6,Walking Lunges,Compound
+Legs,Legs_Variation_2,1,Dumbbell Lunges,Compound
+Legs,Legs_Variation_2,2,Lying Leg Curl,Isolation
+Legs,Legs_Variation_2,3,Leg Extensions,Isolation
+Legs,Legs_Variation_2,4,Seated Calf Raises,Isolation
+Legs,Legs_Variation_2,5,Hip Adductor Machine,Isolation
+Legs,Legs_Variation_2,6,Romani Deadleft,Compound
+Legs,Legs_Variation_3,1,Hack Squats,Compound
+Legs,Legs_Variation_3,2,Seated Leg Curl,Compound
+Legs,Legs_Variation_3,3,Glute Bridges,Isolation
+Legs,Legs_Variation_3,4,Standing Calf Raises,Isolation
+Legs,Legs_Variation_3,5,Hip Adductor Machine,Isolation
+Legs,Legs_Variation_3,6,Leg Extensions,Isolation
+Legs,Legs_Variation_4,1,Barbell Squats,Compound
+Legs,Legs_Variation_4,2,Leg Press,Compound
+Legs,Legs_Variation_4,3,Seated Leg Curl,Isolation
+Legs,Legs_Variation_4,4,Standing Calf Raises,Isolation
+Legs,Legs_Variation_4,5,Hip Adductor Machine,Isolation
+Legs,Legs_Variation_4,6,Glute Bridges,Isolation
+Legs,Legs_Variation_5,1,Barbell Squats,Compound
+Legs,Legs_Variation_5,2,Leg Extensions,Isolation
+Legs,Legs_Variation_5,3,Lying Leg Curl,Isolation
+Legs,Legs_Variation_5,4,Donkey Calf Raises,Isolation
+Legs,Legs_Variation_5,5,Hip Adductor Machine,Isolation
+Legs,Legs_Variation_5,6,Seated Calf Raises,Isolation
+Legs,Legs_Variation_6,1,Front Squats,Compound
+Legs,Legs_Variation_6,2,Lunges,Compound
+Legs,Legs_Variation_6,3,Seated Leg Curl,Isolation
+Legs,Legs_Variation_6,4,Standing Calf Raises,Isolation
+Legs,Legs_Variation_6,5,Hip Adductor Machine,Isolation
+Legs,Legs_Variation_6,6,Hip Thrust,Isolation
+Abs,Abs_Variation_1,1,Crunches,Isolation
+Abs,Abs_Variation_1,2,Leg Raises,Isolation
+Abs,Abs_Variation_2,1,Plank,Isolation
+Abs,Abs_Variation_2,2,Russian Twists,Isolation
+Abs,Abs_Variation_3,1,Cable Crunches,Isolation
+Abs,Abs_Variation_3,2,Hanging Knee Raises,Isolation
+Abs,Abs_Variation_4,1,Mountain Climbers,Isolation
+Abs,Abs_Variation_4,2,Ab Wheel Rollouts,Isolation
+Abs,Abs_Variation_5,1,Lying Leg Raises,Isolation
+Abs,Abs_Variation_5,2,Bicycle Crunches,Isolation
+Abs,Abs_Variation_6,1,Toe Touches,Isolation
+Abs,Abs_Variation_6,2,Flutter Kicks,Isolation
