@@ -521,7 +521,7 @@ def generate_workout_arms_day_df(df_excel, user_fitness_level="beginner"):
         used_names.add(ex_name)
 
     # Fill to minimum 5
-    exercises = _fill_to_min(arms_df, arms_variation, exercises, used_names, user_fitness_level, min_count=5)
+    exercises = _fill_to_min(arms_df, arms_variation, exercises, used_names, user_fitness_level, min_count=6)
 
     return {"variations": {"Arms": arms_variation}, "workout": exercises}
 
