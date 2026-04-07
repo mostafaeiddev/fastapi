@@ -332,7 +332,7 @@ def _load_shoulder_excel():
             except Exception:
                 continue
     return pd.DataFrame()
-def generate_workout_chest_day_df(df_csv, df_excel, user_fitness_level="beginner", user_name="User"):
+def generate_workout_chest_day_df(df_csv, df_excel, user_fitness_level="beginner"):
     """
     Generate chest workout using Excel if available, otherwise use CSV
     Returns ALL exercises for the chosen variation
@@ -580,7 +580,7 @@ def generate_workout_arms_day_df(df_excel, user_fitness_level="beginner"):
         "workout": exercises
     }
 
-def generate_workout_push_day(df, user_fitness_level="beginner", user_name="User"):
+def generate_workout_push_day(df, user_fitness_level="beginner"):
     Chest_df = df[df['Muscle_Group'] == 'Chest']
     Shoulder_df = df[df['Muscle_Group'] == 'Shoulders']
     Triceps_df = df[df['Muscle_Group'] == 'Triceps']
@@ -665,13 +665,13 @@ def generate_workout_pull_day(df, user_fitness_level="beginner"):
 
     return {"variations": {"Back": variation_Back, "Biceps": variation_Biceps}, "workout": exercises}
 
-def generate_plan_one_day(user_id, user_name, level, dataset, week_index, phase, goal, detail):
+def generate_plan_one_day(user_id, level, dataset, week_index, phase, goal, detail):
     day = build_day(["Chest","Back","Legs","Shoulders","Biceps","Triceps"],
                     dataset, week_index, set(), set(), phase, level, goal, detail, full_day=True)
     add_core_and_accessory(day, dataset, week_index, set(), phase, level, goal, detail)
     return {"day1": {"day_type":"Full Body", **day}}
 
-def generate_plan_two_days(user_id, user_name, level, dataset, week_index, phase, goal, detail):
+def generate_plan_two_days(user_id,  level, dataset, week_index, phase, goal, detail):
     upper_groups = ["Chest","Back","Shoulders","Biceps","Triceps"]
     d1 = build_day(upper_groups, dataset, week_index, set(), set(), phase, level, goal, detail, full_day=False)
     add_core_and_accessory(d1, dataset, week_index, set(), phase, level, goal, detail)
@@ -679,13 +679,13 @@ def generate_plan_two_days(user_id, user_name, level, dataset, week_index, phase
     add_core_and_accessory(d2, dataset, week_index, set(), phase, level, goal, detail)
     return {"day1": {"day_type":"Upper Body", **d1}, "day2": {"day_type":"Lower Body", **d2}}
 
-def generate_plan_three_days(user_id, user_name, level, dataset, week_index, phase, goal, detail):
+def generate_plan_three_days(user_id, level, dataset, week_index, phase, goal, detail):
     df = pd.DataFrame(dataset)
     df_excel = _load_shoulder_excel()  # Load Excel (ممكن يكون فاضي)
     user_level = level
     
     # Push and Pull don't need Excel
-    push = generate_workout_push_day(df, user_fitness_level=user_level, user_name=user_name)
+    push = generate_workout_push_day(df, user_fitness_level=user_level)
     pull = generate_workout_pull_day(df, user_fitness_level=user_level)
     
     # Legs needs Excel parameter (pass None if you don't have it)
@@ -710,7 +710,7 @@ def generate_plan_three_days(user_id, user_name, level, dataset, week_index, pha
         "day3": {"day_type": "Legs", **legs}
     }
 
-def generate_plan_four_days(user_id, user_name, level, dataset, week_index, phase, goal, detail):
+def generate_plan_four_days(user_id, level, dataset, week_index, phase, goal, detail):
     """
     Simple 4-day plan generator using the exact logic from your snippets
     """
@@ -880,7 +880,7 @@ def generate_plan_four_days(user_id, user_name, level, dataset, week_index, phas
         "day4": {"day_type": "Legs", **day4}
     }
 
-def generate_plan_five_days(user_id, user_name, level, dataset, week_index, phase, goal, detail):
+def generate_plan_five_days(user_id, level, dataset, week_index, phase, goal, detail):
     """
     5-day plan:
     - day1: Chest (Chest only)
@@ -895,7 +895,7 @@ def generate_plan_five_days(user_id, user_name, level, dataset, week_index, phas
     user_level = level
 
     # Pass both CSV and Excel to all functions
-    chest_day = generate_workout_chest_day_df(df_csv, df_excel, user_fitness_level=user_level, user_name=user_name)
+    chest_day = generate_workout_chest_day_df(df_csv, df_excel, user_fitness_level=user_level)
     back_day = generate_workout_back_day_df(df_csv, df_excel, user_fitness_level=user_level)
     legs_day = generate_workout_leg_day_df(df_csv, df_excel, user_fitness_level=user_level)
     shoulders_day = generate_workout_shoulder_day_df(df_csv, df_excel, user_fitness_level=user_level)
@@ -988,7 +988,7 @@ def generate_workout_arms_from_csv(df_csv, user_fitness_level="beginner"):
         "workout": exercises
     }
 
-def generate_workout_day_from_excel(user_id, user_name, fitness_level, muscle_group, excel_path=BRO_SPLIT_XLSX):
+def generate_workout_day_from_excel(user_id, fitness_level, muscle_group, excel_path=BRO_SPLIT_XLSX):
     exercises = []
     variations = {}
 
@@ -1005,7 +1005,7 @@ def generate_workout_day_from_excel(user_id, user_name, fitness_level, muscle_gr
         # return empty structure if excel not usable
         return {
             "user_id": user_id,
-            "user_name": user_name,
+            #"user_name": user_name,
             "day_type": muscle_group,
             "fitness_level": fitness_level,
             "variations": {},
@@ -1016,7 +1016,7 @@ def generate_workout_day_from_excel(user_id, user_name, fitness_level, muscle_gr
     if mg_df.empty:
         return {
             "user_id": user_id,
-            "user_name": user_name,
+            #"user_name": user_name,
             "day_type": muscle_group,
             "fitness_level": fitness_level,
             "variations": {},
@@ -1040,7 +1040,7 @@ def generate_workout_day_from_excel(user_id, user_name, fitness_level, muscle_gr
 
     return {
         "user_id": user_id,
-        "user_name": user_name,
+       # "user_name": user_name,
         "day_type": muscle_group,
         "fitness_level": fitness_level,
         "variations": variations,
