@@ -1,10 +1,11 @@
 ﻿from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from datetime import datetime
 import pandas as pd
 import os
-import json
+
+# ✅ import الصورة الصح
+from utils.exercise_images import get_image_url
 
 from Ex import (
     parse_activity_level,
@@ -22,64 +23,11 @@ from Ex import (
 app = FastAPI()
 
 # -------------------------
-# Load Cloudinary URLs
-# -------------------------
-BASE_DIR = os.path.dirname(__file__)
-CLOUDINARY_MAP_PATH = os.path.join(BASE_DIR, "cloudinary_urls.json")
-
-def load_cloudinary_map():
-    if not os.path.exists(CLOUDINARY_MAP_PATH):
-        return {}
-
-    with open(CLOUDINARY_MAP_PATH, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    mapping = {}
-
-    for item in data:
-        key = item["public_id"].lower()
-
-        # clean versions
-        clean_key = key.replace("+", " ").replace("-", " ").strip()
-
-        mapping[key] = item["url"]
-        mapping[clean_key] = item["url"]
-
-    return mapping
-
-CLOUDINARY_MAP = load_cloudinary_map()
-
-def get_image_url(exercise_name: str):
-    if not exercise_name:
-        return None
-
-    name = exercise_name.lower().strip()
-
-    # 1. direct
-    if name in CLOUDINARY_MAP:
-        return CLOUDINARY_MAP[name]
-
-    # 2. replace spaces
-    key1 = name.replace(" ", "+")
-    key2 = name.replace(" ", "-")
-
-    if key1 in CLOUDINARY_MAP:
-        return CLOUDINARY_MAP[key1]
-
-    if key2 in CLOUDINARY_MAP:
-        return CLOUDINARY_MAP[key2]
-
-    # 3. fuzzy match 🔥
-    for k in CLOUDINARY_MAP.keys():
-        if name in k or k in name:
-            return CLOUDINARY_MAP[k]
-
-    return None
-
-# -------------------------
 # Load Excel metadata
 # -------------------------
+BASE_DIR = os.path.dirname(__file__)
 XLSX_PATH = os.path.join(BASE_DIR, "all_workouts_final_with_descriptions3.xlsx")
+
 
 def load_exercise_metadata():
     meta = {}
@@ -95,19 +43,20 @@ def load_exercise_metadata():
             continue
 
         key = name.lower()
-        public_id = name.replace(" ", "+").lower()
 
         meta[key] = {
             "description": str(row.get("Exercise_Description") or "").strip() or None,
-            "image_url": get_image_url(name),
+            "image_url": get_image_url(name),  # 🔥 هنا بنجيب الصورة مباشرة
             "video_url": str(row.get("URL Video") or "").strip() or None,
         }
 
     return meta
 
+
 EXERCISE_META = load_exercise_metadata()
 
 print("META COUNT:", len(EXERCISE_META))
+
 
 # -------------------------
 # Enrich
@@ -115,13 +64,17 @@ print("META COUNT:", len(EXERCISE_META))
 def enrich_exercise(exercise: dict) -> dict:
     name = exercise.get("exercise_name", "")
     meta = EXERCISE_META.get(name.lower(), {})
+        
+    image_url = meta.get("image_url") or get_image_url(name)
 
     return {
         **exercise,
         "description": meta.get("description"),
-        "image_url": meta.get("image_url"),
+        # 🔥 fallback مهم جدًا
+        "image_url": image_url,
         "video_url": meta.get("video_url"),
     }
+
 
 def enrich_plan(plan: dict) -> dict:
     enriched = {}
@@ -135,6 +88,7 @@ def enrich_plan(plan: dict) -> dict:
 
     return enriched
 
+
 # -------------------------
 # Request model
 # -------------------------
@@ -143,6 +97,7 @@ class WorkoutRequest(BaseModel):
     activityLevel: str
     goal: str
     availableDays: int
+
 
 # -------------------------
 # Endpoint
@@ -158,20 +113,31 @@ def generate_workout(req: WorkoutRequest):
         week_index = 1
         phase = get_phase(week_index)
 
-        # generate
+        # generate plan
         if req.availableDays == 1:
-            plan = generate_plan_one_day(req.userId, level, dataset, week_index, phase, goal, "compact")
+            plan = generate_plan_one_day(
+                req.userId, level, dataset, week_index, phase, goal, "compact"
+            )
         elif req.availableDays == 2:
-            plan = generate_plan_two_days(req.userId, level, dataset, week_index, phase, goal, "compact")
+            plan = generate_plan_two_days(
+                req.userId, level, dataset, week_index, phase, goal, "compact"
+            )
         elif req.availableDays == 3:
-            plan = generate_plan_three_days(req.userId, level, dataset, week_index, phase, goal, "compact")
+            plan = generate_plan_three_days(
+                req.userId, level, dataset, week_index, phase, goal, "compact"
+            )
         elif req.availableDays == 4:
-            plan = generate_plan_four_days(req.userId, level, dataset, week_index, phase, goal, "compact")
+            plan = generate_plan_four_days(
+                req.userId, level, dataset, week_index, phase, goal, "compact"
+            )
         elif req.availableDays == 5:
-            plan = generate_plan_five_days(req.userId, level, dataset, week_index, phase, goal, "compact")
+            plan = generate_plan_five_days(
+                req.userId, level, dataset, week_index, phase, goal, "compact"
+            )
         else:
             return {"status": "error", "message": "availableDays must be 1–5"}
 
+        # enrich with images/videos/descriptions
         plan = enrich_plan(plan)
 
         return {
