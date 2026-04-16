@@ -145,6 +145,9 @@ def _get_known_aliases(name: str) -> list[str]:
 # Load metadata once at startup
 EXERCISE_META: dict = load_exercise_metadata()
 
+print("META COUNT:", len(EXERCISE_META))
+print("SAMPLE:", list(EXERCISE_META.items())[:2])
+
 def enrich_exercise(exercise: dict) -> dict:
     """Add description and image_url to an exercise dict."""
     name = exercise.get("exercise_name", "")
