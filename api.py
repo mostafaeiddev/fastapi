@@ -209,7 +209,6 @@ def generate_workout(req: WorkoutRequest):
         else:
             return {"status": "error", "message": "availableDays must be between 1 and 5"}
 
-        plan = generators[req.availableDays]()
         plan = enrich_plan(plan)  # ← inject description + image_url + video_url
 
         return {
