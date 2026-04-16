@@ -170,7 +170,7 @@ def enrich_plan(plan: dict) -> dict:
 # -------------------------
 class WorkoutRequest(BaseModel):
     userId: str
-    userName: str
+    #userName: str
     activityLevel: str
     goal: str
     availableDays: int
@@ -181,22 +181,34 @@ class WorkoutRequest(BaseModel):
 @app.post("/generate-workout")
 def generate_workout(req: WorkoutRequest):
     try:
-        level = parse_activity_level(req.activityLevel)
-        goal = normalize_goal(req.goal)
+        user_id = req.userId
+        user_name = req.userName
+        activitylevel_raw = req.activityLevel
+        goal_raw = req.goal
+        available_days = req.availableDays
+
+        # تحويل القيم
+        level = parse_activity_level(activitylevel_raw)
+        goal = normalize_goal(goal_raw)
+
+        # تحميل الداتا
         dataset = load_dataset(DATA_CSV)
         week_index = 1
         phase = get_phase(week_index)
         detail = "compact"
 
-        generators = {
-            1: lambda: generate_plan_one_day(req.userId, req.userName, level, dataset, week_index, phase, goal, detail),
-            2: lambda: generate_plan_two_days(req.userId, req.userName, level, dataset, week_index, phase, goal, detail),
-            3: lambda: generate_plan_three_days(req.userId, req.userName, level, dataset, week_index, phase, goal, detail),
-            4: lambda: generate_plan_four_days(req.userId, req.userName, level, dataset, week_index, phase, goal, detail),
-            5: lambda: generate_plan_five_days(req.userId, req.userName, level, dataset, week_index, phase, goal, detail),
-        }
-
-        if req.availableDays not in generators:
+        # توليد الخطة حسب عدد الأيام
+        if available_days == 1:
+            plan = generate_plan_one_day(user_id, user_name, level, dataset, week_index, phase, goal, detail)
+        elif available_days == 2:
+            plan = generate_plan_two_days(user_id, user_name, level, dataset, week_index, phase, goal, detail)
+        elif available_days == 3:
+            plan = generate_plan_three_days(user_id, user_name, level, dataset, week_index, phase, goal, detail)
+        elif available_days == 4:
+            plan = generate_plan_four_days(user_id, user_name, level, dataset, week_index, phase, goal, detail)
+        elif available_days == 5:
+            plan = generate_plan_five_days(user_id, user_name, level, dataset, week_index, phase, goal, detail)
+        else:
             return {"status": "error", "message": "availableDays must be between 1 and 5"}
 
         plan = generators[req.availableDays]()
@@ -204,8 +216,8 @@ def generate_workout(req: WorkoutRequest):
 
         return {
             "status": "ok",
-            "user_id": req.userId,
-            "user_name": req.userName,
+            "user_id": user_id,
+            "user_name": user_name,
             "fitness_level": level,
             "goal": goal,
             "available_days": req.availableDays,
