@@ -66,23 +66,14 @@ def _normalize_for_image(name: str) -> str:
     # Replace spaces with + (as seen in the Images folder naming)
     return name.replace(" ", "+")
 
+CLOUDINARY_BASE = "https://res.cloudinary.com/duprntyar/image/upload/moveon/exercises/"
+
 def _resolve_image_url(exercise_name: str) -> str | None:
-    """
-    Try to find a matching image file in the Images/ folder.
-    Checks several naming patterns used in the folder.
-    Returns relative URL like /images/Bench+Press.webp or None.
-    """
-    if not os.path.exists(IMAGES_DIR):
-        return None
-
-    # Build candidate filenames to try
     candidates = _build_image_candidates(exercise_name)
-
     for filename in candidates:
-        full_path = os.path.join(IMAGES_DIR, filename)
-        if os.path.exists(full_path):
-            return f"/images/{filename}"
-
+        # شيل الـ extension من الاسم عشان Cloudinary بيتعامل بدونها
+        name_without_ext = os.path.splitext(filename)[0]
+        return f"{CLOUDINARY_BASE}{name_without_ext}.webp"
     return None
 
 def _build_image_candidates(name: str) -> list[str]:
