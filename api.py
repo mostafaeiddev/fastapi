@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from datetime import datetime
 import pandas as pd
 import os
-import re
+import json
 
 from Ex import (
     parse_activity_level,
@@ -22,127 +22,66 @@ from Ex import (
 app = FastAPI()
 
 # -------------------------
-# Static files for images
+# Load Cloudinary URLs
 # -------------------------
-IMAGES_DIR = os.path.join(os.path.dirname(__file__), "Images")
-if os.path.exists(IMAGES_DIR):
-    app.mount("/images", StaticFiles(directory=IMAGES_DIR), name="images")
+BASE_DIR = os.path.dirname(__file__)
+CLOUDINARY_MAP_PATH = os.path.join(BASE_DIR, "cloudinary_urls.json")
+
+def load_cloudinary_map():
+    if not os.path.exists(CLOUDINARY_MAP_PATH):
+        print("❌ cloudinary_urls.json not found")
+        return {}
+
+    with open(CLOUDINARY_MAP_PATH, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    return {
+        item["public_id"].lower(): item["url"]
+        for item in data
+    }
+
+CLOUDINARY_MAP = load_cloudinary_map()
 
 # -------------------------
-# Load exercise metadata (Description + Image)
+# Load Excel metadata
 # -------------------------
-XLSX_PATH = os.path.join(os.path.dirname(__file__), "all_workouts_final_with_descriptions3.xlsx")
+XLSX_PATH = os.path.join(BASE_DIR, "all_workouts_final_with_descriptions3.xlsx")
 
-def load_exercise_metadata() -> dict:
-    """
-    Returns dict: { "exercise_name_lower": { "description": ..., "image_url": ..., "video_url": ... } }
-    """
+def load_exercise_metadata():
     meta = {}
+
     if not os.path.exists(XLSX_PATH):
         return meta
-    try:
-        df = pd.read_excel(XLSX_PATH)
-        for _, row in df.iterrows():
-            name = str(row.get("Exercise_Name") or "").strip()
-            if not name:
-                continue
-            key = name.lower()
-            if key in meta:
-                continue  # keep first occurrence only
-            meta[key] = {
-                "description": str(row.get("Exercise_Description") or "").strip() or None,
-                "image_url": _resolve_image_url(name),
-                "video_url": str(row.get("URL Video") or "").strip() or None,
-            }
-    except Exception:
-        pass
+
+    df = pd.read_excel(XLSX_PATH)
+
+    for _, row in df.iterrows():
+        name = str(row.get("Exercise_Name") or "").strip()
+        if not name:
+            continue
+
+        key = name.lower()
+        public_id = name.replace(" ", "+").lower()
+
+        meta[key] = {
+            "description": str(row.get("Exercise_Description") or "").strip() or None,
+            "image_url": CLOUDINARY_MAP.get(public_id),
+            "video_url": str(row.get("URL Video") or "").strip() or None,
+        }
+
     return meta
 
-def _normalize_for_image(name: str) -> str:
-    """
-    Normalize exercise name to match image filename pattern.
-    e.g. "Barbell Bench Press" → tries "Barbell+Bench+Press.webp" and variants
-    """
-    # Replace spaces with + (as seen in the Images folder naming)
-    return name.replace(" ", "+")
-
-CLOUDINARY_BASE = "https://res.cloudinary.com/duprntyar/image/upload/moveon/exercises/"
-
-def _resolve_image_url(exercise_name: str) -> str | None:
-    candidates = _build_image_candidates(exercise_name)
-    for filename in candidates:
-        # شيل الـ extension من الاسم عشان Cloudinary بيتعامل بدونها
-        name_without_ext = os.path.splitext(filename)[0]
-        return f"{CLOUDINARY_BASE}{name_without_ext}.webp"
-    return None
-
-def _build_image_candidates(name: str) -> list[str]:
-    """
-    Generate possible image filenames for a given exercise name.
-    The Images folder uses .webp and .jpg/.png extensions with + or - separators.
-    """
-    candidates = []
-    extensions = [".webp", ".jpg", ".jpeg", ".png"]
-
-    # Pattern 1: "Barbell+Bench+Press"
-    plus_name = name.replace(" ", "+")
-    # Pattern 2: "Barbell Bench Press" (with spaces, rare but check)
-    # Pattern 3: lowercase
-    # Pattern 4: remove special chars
-
-    for ext in extensions:
-        candidates.append(f"{plus_name}{ext}")
-        candidates.append(f"{plus_name.lower()}{ext}")
-
-    # Pattern: words joined by nothing (CamelCase unlikely but worth checking)
-    # Pattern: handle known aliases
-    aliases = _get_known_aliases(name)
-    for alias in aliases:
-        for ext in extensions:
-            candidates.append(f"{alias}{ext}")
-            candidates.append(f"{alias.lower()}{ext}")
-
-    return candidates
-
-# Map exercise names that differ between xlsx and image filenames
-EXERCISE_IMAGE_ALIASES = {
-    "Barbell Bench Press": ["Machine+Bench+Press", "dumbbell-bench-press"],
-    "Incline Barbell Press": ["incline-bench-press-benefits-types-technique"],
-    "Dumbbell Bench Press": ["dumbbell-bench-press", "dumbbell-incline-bench-press"],
-    "Incline Dumbbell Press": ["dumbbell-incline-bench-press", "Incline+Dumbbell+Curls"],
-    "Cable Crossovers High to Low": ["cable-crossover-variation"],
-    "Barbell Overhead Press": ["Barbell+Overhead+Press"],
-    "Machine Shoulder Press": ["Machine+Shoulder+Press"],
-    "Seated Rows Close-Grip": ["Seated+Rows+Close-Grip"],
-    "Single-Arm Dumbbell Row": ["dumbbell-row"],
-    "Romani Deadleft": ["Romani+Deadleft"],
-    "Walking Lunges": ["Lunges"],
-    "Dumbbell Lunges": ["Lunges"],
-    "Standing Calf Raise": ["Standing+Calf+Raises"],
-    "Close-Grip Bench Press": ["Close+Grip+Barbell+Bench+Press"],
-    "Single-Arm Cable Pushdown": ["Rope+Pushdowns"],
-    "Overhead Rope Extensions": ["Rope+Pushdowns"],
-    "Cable Kickbacks": ["Dumbbell+Tricep+Kickback"],
-    "Tricep Machine Dip": ["Dips"],
-    "Lying Leg Raises": ["Leg+Raises"],
-    "Toe Touches": ["Crunches"],
-    "Cable Crunches": ["Crunches"],
-    "Deadlifts": ["Romani+Deadleft"],
-}
-
-def _get_known_aliases(name: str) -> list[str]:
-    return EXERCISE_IMAGE_ALIASES.get(name, [])
-
-# Load metadata once at startup
-EXERCISE_META: dict = load_exercise_metadata()
+EXERCISE_META = load_exercise_metadata()
 
 print("META COUNT:", len(EXERCISE_META))
-print("SAMPLE:", list(EXERCISE_META.items())[:2])
 
+# -------------------------
+# Enrich
+# -------------------------
 def enrich_exercise(exercise: dict) -> dict:
-    """Add description and image_url to an exercise dict."""
     name = exercise.get("exercise_name", "")
     meta = EXERCISE_META.get(name.lower(), {})
+
     return {
         **exercise,
         "description": meta.get("description"),
@@ -151,12 +90,15 @@ def enrich_exercise(exercise: dict) -> dict:
     }
 
 def enrich_plan(plan: dict) -> dict:
-    """Walk the plan and enrich each exercise."""
     enriched = {}
+
     for day_key, day_val in plan.items():
         enriched_day = {**day_val}
-        enriched_day["workout"] = [enrich_exercise(ex) for ex in day_val.get("workout", [])]
+        enriched_day["workout"] = [
+            enrich_exercise(ex) for ex in day_val.get("workout", [])
+        ]
         enriched[day_key] = enriched_day
+
     return enriched
 
 # -------------------------
@@ -169,45 +111,38 @@ class WorkoutRequest(BaseModel):
     availableDays: int
 
 # -------------------------
-# Main Endpoint
+# Endpoint
 # -------------------------
 @app.post("/generate-workout")
 def generate_workout(req: WorkoutRequest):
     try:
-        user_id = req.userId
-        activitylevel_raw = req.activityLevel
-        goal_raw = req.goal
-        available_days = req.availableDays
+        level = parse_activity_level(req.activityLevel)
+        goal = normalize_goal(req.goal)
 
-        # تحويل القيم
-        level = parse_activity_level(activitylevel_raw)
-        goal = normalize_goal(goal_raw)
-
-        # تحميل الداتا
         dataset = load_dataset(DATA_CSV)
+
         week_index = 1
         phase = get_phase(week_index)
-        detail = "compact"
 
-        # توليد الخطة حسب عدد الأيام
-        if available_days == 1:
-            plan = generate_plan_one_day(user_id,  level, dataset, week_index, phase, goal, detail)
-        elif available_days == 2:
-            plan = generate_plan_two_days(user_id,  level, dataset, week_index, phase, goal, detail)
-        elif available_days == 3:
-            plan = generate_plan_three_days(user_id,  level, dataset, week_index, phase, goal, detail)
-        elif available_days == 4:
-            plan = generate_plan_four_days(user_id,  level, dataset, week_index, phase, goal, detail)
-        elif available_days == 5:
-            plan = generate_plan_five_days(user_id,  level, dataset, week_index, phase, goal, detail)
+        # generate
+        if req.availableDays == 1:
+            plan = generate_plan_one_day(req.userId, level, dataset, week_index, phase, goal, "compact")
+        elif req.availableDays == 2:
+            plan = generate_plan_two_days(req.userId, level, dataset, week_index, phase, goal, "compact")
+        elif req.availableDays == 3:
+            plan = generate_plan_three_days(req.userId, level, dataset, week_index, phase, goal, "compact")
+        elif req.availableDays == 4:
+            plan = generate_plan_four_days(req.userId, level, dataset, week_index, phase, goal, "compact")
+        elif req.availableDays == 5:
+            plan = generate_plan_five_days(req.userId, level, dataset, week_index, phase, goal, "compact")
         else:
-            return {"status": "error", "message": "availableDays must be between 1 and 5"}
+            return {"status": "error", "message": "availableDays must be 1–5"}
 
-        plan = enrich_plan(plan)  # ← inject description + image_url + video_url
+        plan = enrich_plan(plan)
 
         return {
             "status": "ok",
-            "user_id": user_id,
+            "user_id": req.userId,
             "fitness_level": level,
             "goal": goal,
             "available_days": req.availableDays,
