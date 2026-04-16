@@ -182,7 +182,7 @@ class WorkoutRequest(BaseModel):
 def generate_workout(req: WorkoutRequest):
     try:
         user_id = req.userId
-        user_name = req.userName
+       #user_name = req.userName
         activitylevel_raw = req.activityLevel
         goal_raw = req.goal
         available_days = req.availableDays
