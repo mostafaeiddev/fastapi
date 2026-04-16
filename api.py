@@ -29,18 +29,52 @@ CLOUDINARY_MAP_PATH = os.path.join(BASE_DIR, "cloudinary_urls.json")
 
 def load_cloudinary_map():
     if not os.path.exists(CLOUDINARY_MAP_PATH):
-        print("❌ cloudinary_urls.json not found")
         return {}
 
     with open(CLOUDINARY_MAP_PATH, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    return {
-        item["public_id"].lower(): item["url"]
-        for item in data
-    }
+    mapping = {}
+
+    for item in data:
+        key = item["public_id"].lower()
+
+        # clean versions
+        clean_key = key.replace("+", " ").replace("-", " ").strip()
+
+        mapping[key] = item["url"]
+        mapping[clean_key] = item["url"]
+
+    return mapping
 
 CLOUDINARY_MAP = load_cloudinary_map()
+
+def get_image_url(exercise_name: str):
+    if not exercise_name:
+        return None
+
+    name = exercise_name.lower().strip()
+
+    # 1. direct
+    if name in CLOUDINARY_MAP:
+        return CLOUDINARY_MAP[name]
+
+    # 2. replace spaces
+    key1 = name.replace(" ", "+")
+    key2 = name.replace(" ", "-")
+
+    if key1 in CLOUDINARY_MAP:
+        return CLOUDINARY_MAP[key1]
+
+    if key2 in CLOUDINARY_MAP:
+        return CLOUDINARY_MAP[key2]
+
+    # 3. fuzzy match 🔥
+    for k in CLOUDINARY_MAP.keys():
+        if name in k or k in name:
+            return CLOUDINARY_MAP[k]
+
+    return None
 
 # -------------------------
 # Load Excel metadata
@@ -65,7 +99,7 @@ def load_exercise_metadata():
 
         meta[key] = {
             "description": str(row.get("Exercise_Description") or "").strip() or None,
-            "image_url": CLOUDINARY_MAP.get(public_id),
+            "image_url": get_image_url(name),
             "video_url": str(row.get("URL Video") or "").strip() or None,
         }
 
