@@ -94,21 +94,20 @@ def load_dataset(path):
         except Exception:
             pass
 
-    sample = [
-        {"Exercise_Name":"Bench Press","Muscle_Group":"Chest","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
+        sample = [
+        {"Exercise_Name":"Barbell Bench Press","Muscle_Group":"Chest","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
         {"Exercise_Name":"Incline Dumbbell Press","Muscle_Group":"Chest","Exercise_Type":"Compound","Workout_Variation":"Dumbbell","Exercise_Number":2,"Primary_Equipment":"Dumbbell"},
-        {"Exercise_Name":"Chest Fly","Muscle_Group":"Chest","Exercise_Type":"Isolation","Workout_Variation":"Machine","Exercise_Number":3,"Primary_Equipment":"Machine"},
-        {"Exercise_Name":"Overhead Press","Muscle_Group":"Shoulders","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
-        {"Exercise_Name":"Lateral Raise","Muscle_Group":"Shoulders","Exercise_Type":"Isolation","Workout_Variation":"Dumbbell","Exercise_Number":2,"Primary_Equipment":"Dumbbell"},
-        {"Exercise_Name":"Triceps Pushdown","Muscle_Group":"Triceps","Exercise_Type":"Isolation","Workout_Variation":"Cable","Exercise_Number":1,"Primary_Equipment":"Cable"},
-        {"Exercise_Name":"Pull Ups","Muscle_Group":"Back","Exercise_Type":"Compound","Workout_Variation":"Bodyweight","Exercise_Number":1,"Primary_Equipment":"Bodyweight"},
-        {"Exercise_Name":"Barbell Row","Muscle_Group":"Back","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":2,"Primary_Equipment":"Barbell"},
-        {"Exercise_Name":"Bicep Curl","Muscle_Group":"Biceps","Exercise_Type":"Isolation","Workout_Variation":"Dumbbell","Exercise_Number":1,"Primary_Equipment":"Dumbbell"},
-        {"Exercise_Name":"Squat","Muscle_Group":"Legs","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
+        {"Exercise_Name":"Pec Deck Flyes","Muscle_Group":"Chest","Exercise_Type":"Isolation","Workout_Variation":"Machine","Exercise_Number":3,"Primary_Equipment":"Machine"},
+        {"Exercise_Name":"Barbell Overhead Press","Muscle_Group":"Shoulders","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
+        {"Exercise_Name":"Lateral Raises","Muscle_Group":"Shoulders","Exercise_Type":"Isolation","Workout_Variation":"Dumbbell","Exercise_Number":2,"Primary_Equipment":"Dumbbell"},
+        {"Exercise_Name":"Rope Pushdowns","Muscle_Group":"Triceps","Exercise_Type":"Isolation","Workout_Variation":"Cable","Exercise_Number":1,"Primary_Equipment":"Cable"},
+        {"Exercise_Name":"Lat Pulldowns","Muscle_Group":"Back","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
+        {"Exercise_Name":"Barbell Rows","Muscle_Group":"Back","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":2,"Primary_Equipment":"Barbell"},
+        {"Exercise_Name":"Barbell Curls","Muscle_Group":"Biceps","Exercise_Type":"Isolation","Workout_Variation":"Dumbbell","Exercise_Number":1,"Primary_Equipment":"Dumbbell"},
+        {"Exercise_Name":"Barbell Squats","Muscle_Group":"Legs","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
         {"Exercise_Name":"Leg Press","Muscle_Group":"Legs","Exercise_Type":"Compound","Workout_Variation":"Machine","Exercise_Number":2,"Primary_Equipment":"Machine"},
-        {"Exercise_Name":"Leg Curl","Muscle_Group":"Legs","Exercise_Type":"Isolation","Workout_Variation":"Machine","Exercise_Number":3,"Primary_Equipment":"Machine"},
-        {"Exercise_Name":"Deadlift","Muscle_Group":"Legs","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":4,"Primary_Equipment":"Barbell"},
-        {"Exercise_Name":"Plank","Muscle_Group":"Core","Exercise_Type":"Isolation","Workout_Variation":"Bodyweight","Exercise_Number":1,"Primary_Equipment":"Bodyweight"},
+        {"Exercise_Name":"Lying Leg Curl","Muscle_Group":"Legs","Exercise_Type":"Isolation","Workout_Variation":"Machine","Exercise_Number":3,"Primary_Equipment":"Machine"},
+        {"Exercise_Name":"Deadlifts","Muscle_Group":"Legs","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":4,"Primary_Equipment":"Barbell"},
     ]
     return sample
 

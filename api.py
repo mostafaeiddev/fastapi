@@ -4,6 +4,20 @@ from datetime import datetime
 import pandas as pd
 import os
 
+DAY_IMAGE_MAP = {
+    "Full Body":              "https://res.cloudinary.com/duprntyar/image/upload/v1776638094/full_body_tmqhb1.png",
+    "Upper Body":             "https://res.cloudinary.com/duprntyar/image/upload/v1776638089/upper_body_umecey.png",
+    "Lower Body":             "https://res.cloudinary.com/duprntyar/image/upload/v1776638085/lower_body_rhoyx6.png",
+    "Push":                   "https://res.cloudinary.com/duprntyar/image/upload/v1776638086/push_day_n4vnk6.png",
+    "Pull":                   "https://res.cloudinary.com/duprntyar/image/upload/v1776638086/pull_day_qojwe3.png",
+    "Legs":                   "https://res.cloudinary.com/duprntyar/image/upload/v1776638095/leg_day_rjvyar.png",
+    "Chest & Triceps":        "https://res.cloudinary.com/duprntyar/image/upload/v1776638092/chest_and_triceps_mupyaf.png",
+    "Back & Biceps":          "https://res.cloudinary.com/duprntyar/image/upload/v1776638090/back_and_bicebs_nwj9qu.png",
+    "Shoulders":              "https://res.cloudinary.com/duprntyar/image/upload/v1776638088/shoulder_on4d3y.png",
+    "Chest":                  "https://res.cloudinary.com/duprntyar/image/upload/v1776638093/chest_a3lrka.png",
+    "Back":                   "https://res.cloudinary.com/duprntyar/image/upload/v1776638091/back_wusfif.png",
+    "Arms":                   "https://res.cloudinary.com/duprntyar/image/upload/v1776638090/back_and_bicebs_nwj9qu.png",
+}
 
 
 from Ex import (
@@ -77,16 +91,12 @@ def enrich_exercise(exercise: dict) -> dict:
 
 def enrich_plan(plan: dict) -> dict:
     enriched = {}
-
     for day_key, day_val in plan.items():
         enriched_day = {**day_val}
-        enriched_day["workout"] = [
-            enrich_exercise(ex) for ex in day_val.get("workout", [])
-        ]
+        enriched_day["day_image_url"] = DAY_IMAGE_MAP.get(day_val.get("day_type"), None)
+        enriched_day["workout"] = [enrich_exercise(ex) for ex in day_val.get("workout", [])]
         enriched[day_key] = enriched_day
-
     return enriched
-
 
 # -------------------------
 # Request model
