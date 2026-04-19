@@ -75,26 +75,29 @@ def normalize_goal(raw):
 # -------------------------
 def load_dataset(path):
     exercises = []
-    if os.path.exists(path):
+    
+    # قرا الـ xlsx مباشرة
+    xlsx_path = os.path.join(os.path.dirname(__file__), "all_workouts_final_with_descriptions3.xlsx")
+    if os.path.exists(xlsx_path):
         try:
-            with open(path, newline='', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                for r in reader:
-                    ex = {
-                        "Exercise_Name": r.get("Exercise_Name") or r.get("exercise_name") or "",
-                        "Muscle_Group": r.get("Muscle_Group") or r.get("muscle_group") or "",
-                        "Exercise_Type": r.get("Exercise_Type") or r.get("exercise_type") or "",
-                        "Workout_Variation": r.get("Workout_Variation") or r.get("Workout_Variation") or "",
-                        "Exercise_Number": int(r.get("Exercise_Number") or r.get("exercise_number") or 0),
-                        "Primary_Equipment": r.get("Primary_Equipment") or r.get("primary_equipment") or ""
-                    }
+            df = pd.read_excel(xlsx_path)
+            for _, row in df.iterrows():
+                ex = {
+                    "Exercise_Name": str(row.get("Exercise_Name") or "").strip(),
+                    "Muscle_Group": str(row.get("Muscle_Group") or "").strip(),
+                    "Exercise_Type": str(row.get("Exercise_Type") or "").strip(),
+                    "Workout_Variation": str(row.get("Workout_Variation") or "").strip(),
+                    "Exercise_Number": int(row.get("Exercise_Number") or 0),
+                    "Primary_Equipment": str(row.get("Primary_Equipment") or "").strip()
+                }
+                if ex["Exercise_Name"]:
                     exercises.append(ex)
             if exercises:
                 return exercises
-        except Exception:
-            pass
+        except Exception as e:
+            print("XLSX load error:", e)
 
-    # ← هنا بره الـ if مش جواه
+    # fallback sample
     sample = [
         {"Exercise_Name":"Barbell Bench Press","Muscle_Group":"Chest","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
         {"Exercise_Name":"Incline Dumbbell Press","Muscle_Group":"Chest","Exercise_Type":"Compound","Workout_Variation":"Dumbbell","Exercise_Number":2,"Primary_Equipment":"Dumbbell"},
