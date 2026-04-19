@@ -234,8 +234,12 @@ def build_day(muscle_groups, dataset, week_index, used_variations, used_ex_names
         max_count = MAX_PER_GROUP.get(group, 3)
 
         if full_day and group == "Legs":
-            compound_ex = [e for e in filtered if e.get("Exercise_Type","").lower() == "compound"]
-            selected = random.sample(compound_ex, min(2, len(compound_ex)))
+            selected = filtered[:2]
+            if len(selected) < 2:
+                other_items = [e for e in group_items 
+                               if e["Workout_Variation"] != variation 
+                               and e["Exercise_Name"] not in {s["Exercise_Name"] for s in selected}]
+                selected += other_items[:2 - len(selected)]
         else:
             selected = filtered[:max_count]
             if len(selected) < max_count:
