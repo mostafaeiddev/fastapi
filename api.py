@@ -28,6 +28,16 @@ BASE_DIR = os.path.dirname(__file__)
 XLSX_PATH = os.path.join(BASE_DIR, "all_workouts_final_with_descriptions3.xlsx")
 
 
+CLOUDINARY_BASE = "https://res.cloudinary.com/duprntyar/image/upload/moveon/Final_Images/"
+
+def get_image_url(exercise_name: str) -> str | None:
+    if not exercise_name:
+        return None
+    filename = exercise_name.strip().replace(" ", "+") + ".webp"
+    return f"{CLOUDINARY_BASE}{filename}"
+
+
+
 def load_exercise_metadata():
     meta = {}
 
@@ -58,23 +68,12 @@ print("META COUNT:", len(EXERCISE_META))
 
 
 
-CLOUDINARY_BASE = "https://res.cloudinary.com/duprntyar/image/upload/moveon/Final_Images/"
-
-def get_image_url(exercise_name: str) -> str | None:
-    if not exercise_name:
-        return None
-    filename = exercise_name.strip().replace(" ", "+") + ".webp"
-    return f"{CLOUDINARY_BASE}{filename}"
 
 
-# -------------------------
-# Enrich
-# -------------------------
 def enrich_exercise(exercise: dict) -> dict:
     name = exercise.get("exercise_name", "")
     meta = EXERCISE_META.get(name.lower(), {})
         
-    image_url = meta.get("image_url") or get_image_url(name)
 
     return {
         **exercise,
