@@ -212,10 +212,10 @@ def build_day(muscle_groups, dataset, week_index, used_variations, used_ex_names
     MAX_PER_GROUP = {
         "Chest": 3,
         "Back": 3,
-        "Shoulders": 3,
-        "Biceps": 3,
-        "Triceps": 3,
-        "Legs": 8,
+        "Shoulders": 2,
+        "Biceps": 2,
+        "Triceps": 2,
+        "Legs": 6,
     }
 
     for group in muscle_groups:
