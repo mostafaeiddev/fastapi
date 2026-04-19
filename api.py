@@ -92,12 +92,14 @@ def enrich_exercise(exercise: dict) -> dict:
 def enrich_plan(plan: dict) -> dict:
     enriched = {}
     for day_key, day_val in plan.items():
-        enriched_day = {**day_val}
-        enriched_day["day_image_url"] = DAY_IMAGE_MAP.get(day_val.get("day_type"), None)
-        enriched_day["workout"] = [enrich_exercise(ex) for ex in day_val.get("workout", [])]
+        enriched_day = {
+            "day_type": day_val.get("day_type"),
+            "day_image_url": DAY_IMAGE_MAP.get(day_val.get("day_type"), None),
+            "variations": day_val.get("variations"),
+            "workout": [enrich_exercise(ex) for ex in day_val.get("workout", [])],
+        }
         enriched[day_key] = enriched_day
     return enriched
-
 # -------------------------
 # Request model
 # -------------------------
