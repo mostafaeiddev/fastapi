@@ -73,6 +73,7 @@ EXERCISE_META = load_exercise_metadata()
 EXERCISE_NAME_ALIASES = {
     "dumbbell lateral raises": "lateral raises",
     "barbell shrugs": "barbell rows",
+    "dumbbell shrugs": "barbell rows",
     "deadlifts": "deadleft",
     "dumbbell concentration curls": "concentration curls",
     "dumbbell wrist curls": "dumbbell curls",
@@ -80,6 +81,9 @@ EXERCISE_NAME_ALIASES = {
     "barbell curl": "barbell curls",
     "triceps pushdown": "tricep pushdown",
     "leg curl": "lying leg curl",
+    "low cable rows": "seated rows close-grip",
+    "hyperextensions": "barbell rows",
+    "seated cable rows close-grip": "seated rows close-grip",
 }
 print("META COUNT:", len(EXERCISE_META))
 
