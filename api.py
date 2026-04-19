@@ -4,8 +4,7 @@ from datetime import datetime
 import pandas as pd
 import os
 
-# ✅ import الصورة الصح
-from utils.exercise_images import get_image_url
+
 
 from Ex import (
     parse_activity_level,
@@ -58,6 +57,16 @@ EXERCISE_META = load_exercise_metadata()
 print("META COUNT:", len(EXERCISE_META))
 
 
+
+CLOUDINARY_BASE = "https://res.cloudinary.com/duprntyar/image/upload/moveon/Final_Images/"
+
+def get_image_url(exercise_name: str) -> str | None:
+    if not exercise_name:
+        return None
+    filename = exercise_name.strip().replace(" ", "+") + ".webp"
+    return f"{CLOUDINARY_BASE}{filename}"
+
+
 # -------------------------
 # Enrich
 # -------------------------
@@ -71,7 +80,7 @@ def enrich_exercise(exercise: dict) -> dict:
         **exercise,
         "description": meta.get("description"),
         # 🔥 fallback مهم جدًا
-        "image_url": image_url,
+        "image_url": get_image_url(name),
         "video_url": meta.get("video_url"),
     }
 
