@@ -28,14 +28,6 @@ BASE_DIR = os.path.dirname(__file__)
 XLSX_PATH = os.path.join(BASE_DIR, "all_workouts_final_with_descriptions3.xlsx")
 
 
-CLOUDINARY_BASE = "https://res.cloudinary.com/duprntyar/image/upload/moveon/Final_Images/"
-
-def get_image_url(exercise_name: str) -> str | None:
-    if not exercise_name:
-        return None
-    filename = exercise_name.strip().replace(" ", "+") + ".webp"
-    return f"{CLOUDINARY_BASE}{filename}"
-
 
 
 def load_exercise_metadata():
@@ -55,7 +47,7 @@ def load_exercise_metadata():
 
         meta[key] = {
             "description": str(row.get("Exercise_Description") or "").strip() or None,
-            "image_url": get_image_url(name),  # 🔥 هنا بنجيب الصورة مباشرة
+            "image_url": str(row.get("URL Image") or "").strip() or None,  # ← بدل get_image_url
             "video_url": str(row.get("URL Video") or "").strip() or None,
         }
 
@@ -78,8 +70,7 @@ def enrich_exercise(exercise: dict) -> dict:
     return {
         **exercise,
         "description": meta.get("description"),
-        # 🔥 fallback مهم جدًا
-        "image_url": get_image_url(name),
+        "image_url": meta.get("image_url"),  # ← مش get_image_url(name)
         "video_url": meta.get("video_url"),
     }
 
