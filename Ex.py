@@ -42,7 +42,7 @@ def parse_activity_level(val):
 # -------------------------
 # Paths
 # -------------------------
-DATA_CSV = os.path.join(os.path.dirname(__file__), "all_workouts_final_with_descriptions3.xlxs")
+DATA_CSV = os.path.join(os.path.dirname(__file__), "all_workouts_final_with_descriptions3.xlsx")
 BRO_SPLIT_XLSX = os.path.join(os.path.dirname(__file__), "Bro_Split.xlsx")
 PRO_SPLIT_XLSX = os.path.join(os.path.dirname(__file__), "pro_split.xlsx")
 PRO_SPLIT_XLSX_ALT = os.path.join(os.path.dirname(__file__), "Pro_Split.xlsx")
