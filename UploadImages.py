@@ -31,7 +31,7 @@ def upload_all():
             result = cloudinary.uploader.upload(
                 filepath,
                 public_id=public_id,
-                folder="moveon/workouts",
+                folder="moveon/Final_Images",
                 overwrite=True,
                 resource_type="image",
                 format="webp"   # 👈 مهم
