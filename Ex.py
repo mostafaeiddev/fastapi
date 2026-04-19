@@ -94,7 +94,8 @@ def load_dataset(path):
         except Exception:
             pass
 
-        sample = [
+    # ← هنا بره الـ if مش جواه
+    sample = [
         {"Exercise_Name":"Barbell Bench Press","Muscle_Group":"Chest","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":1,"Primary_Equipment":"Barbell"},
         {"Exercise_Name":"Incline Dumbbell Press","Muscle_Group":"Chest","Exercise_Type":"Compound","Workout_Variation":"Dumbbell","Exercise_Number":2,"Primary_Equipment":"Dumbbell"},
         {"Exercise_Name":"Pec Deck Flyes","Muscle_Group":"Chest","Exercise_Type":"Isolation","Workout_Variation":"Machine","Exercise_Number":3,"Primary_Equipment":"Machine"},
@@ -110,7 +111,6 @@ def load_dataset(path):
         {"Exercise_Name":"Deadlifts","Muscle_Group":"Legs","Exercise_Type":"Compound","Workout_Variation":"Barbell","Exercise_Number":4,"Primary_Equipment":"Barbell"},
     ]
     return sample
-
 # -------------------------
 # Sets & reps logic
 # -------------------------
