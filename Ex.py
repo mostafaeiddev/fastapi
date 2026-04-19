@@ -209,6 +209,15 @@ def build_day(muscle_groups, dataset, week_index, used_variations, used_ex_names
     day_exercises = []
     variations = {}
 
+    MAX_PER_GROUP = {
+        "Chest": 3,
+        "Back": 3,
+        "Shoulders": 2,
+        "Biceps": 2,
+        "Triceps": 2,
+        "Legs": 5,
+    }
+
     for group in muscle_groups:
         group_items = [e for e in dataset if e["Muscle_Group"].lower() == group.lower()]
         if not group_items:
@@ -219,36 +228,30 @@ def build_day(muscle_groups, dataset, week_index, used_variations, used_ex_names
         variations[group] = variation
         filtered = [e for e in group_items if e["Workout_Variation"] == variation]
 
-        if group in ["Chest", "Back", "Shoulders"]:
-            selected = filtered
-        elif group == "Biceps":
-            selected = random.sample(filtered, min(3, len(filtered)))
-        elif group == "Triceps":
-            selected = random.sample(filtered, min(2, len(filtered)))
-        elif group == "Legs":
-            if full_day:
-                compound_ex = [e for e in filtered if e.get("Exercise_Type","").lower() == "compound"]
-                selected = random.sample(compound_ex, min(2, len(compound_ex)))
-            else:
-                selected = random.sample(filtered, min(7, len(filtered)))
+        max_count = MAX_PER_GROUP.get(group, 3)
+
+        if full_day and group == "Legs":
+            compound_ex = [e for e in filtered if e.get("Exercise_Type","").lower() == "compound"]
+            selected = random.sample(compound_ex, min(2, len(compound_ex)))
         else:
-            selected = random.sample(filtered, min(3, len(filtered)))
+            selected = filtered[:max_count]
+            if len(selected) < max_count:
+                other_items = [e for e in group_items 
+                               if e["Workout_Variation"] != variation 
+                               and e["Exercise_Name"] not in {s["Exercise_Name"] for s in selected}]
+                selected += other_items[:max_count - len(selected)]
 
         for row in selected:
             sets, reps = compute_sets_reps(level, row.get("Exercise_Type", "Compound"), week_index, phase, goal)
-            ex = {
+            day_exercises.append({
                 "exercise_name": row["Exercise_Name"],
                 "muscle_group": row["Muscle_Group"],
                 "exercise_type": row.get("Exercise_Type", "Compound"),
                 "sets": sets,
                 "reps": reps
-            }
-            day_exercises.append(ex)
+            })
 
-    return {
-        "variations": variations,
-        "workout": day_exercises
-    }
+    return {"variations": variations, "workout": day_exercises}
 
 def add_core_and_accessory(day_plan, dataset, week_index, used_ex_names, phase, level, goal, detail):
     if not INCLUDE_CORE:
