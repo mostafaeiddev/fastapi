@@ -70,6 +70,17 @@ def load_exercise_metadata():
 
 EXERCISE_META = load_exercise_metadata()
 
+EXERCISE_NAME_ALIASES = {
+    "dumbbell lateral raises": "lateral raises",
+    "barbell shrugs": "barbell rows",
+    "deadlifts": "deadleft",
+    "dumbbell concentration curls": "concentration curls",
+    "dumbbell wrist curls": "dumbbell curls",
+    "dumbbell reverse wrist curls": "dumbbell curls",
+    "barbell curl": "barbell curls",
+    "triceps pushdown": "tricep pushdown",
+    "leg curl": "lying leg curl",
+}
 print("META COUNT:", len(EXERCISE_META))
 
 
@@ -78,16 +89,16 @@ print("META COUNT:", len(EXERCISE_META))
 
 def enrich_exercise(exercise: dict) -> dict:
     name = exercise.get("exercise_name", "")
-    meta = EXERCISE_META.get(name.lower(), {})
-        
+    key = name.lower()
+    key = EXERCISE_NAME_ALIASES.get(key, key)  # ← alias lookup
+    meta = EXERCISE_META.get(key, {})
 
     return {
         **exercise,
         "description": meta.get("description"),
-        "image_url": meta.get("image_url"),  # ← مش get_image_url(name)
+        "image_url": meta.get("image_url"),
         "video_url": meta.get("video_url"),
     }
-
 
 def enrich_plan(plan: dict) -> dict:
     enriched = {}
